@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🛵 Tin Hot Bình Dương</title>
+  <link href="https://fonts.googleapis.com/css2?family=Coiny&family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+      color: #2d3436;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    h1 {
+      font-family: 'Coiny', cursive;
+      text-align: center;
+      font-size: 3.5em;
+      color: #d63031;
+      text-shadow: 2px 2px #ffeaa7;
+      margin-bottom: 20px;
+    }
+
+    #searchBox {
+      width: 100%;
+      padding: 14px;
+      font-size: 1.1em;
+      border-radius: 12px;
+      border: 2px dashed #d63031;
+      margin-bottom: 30px;
+      background-color: #fff;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    #searchBox:focus {
+      outline: none;
+      border-color: #fd79a8;
+      box-shadow: 0 0 10px rgba(253, 121, 168, 0.3);
+    }
+
+    .news-item {
+      background: #fff0f6;
+      border-left: 8px solid #fd79a8;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+      border-radius: 16px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.07);
+      transition: transform 0.2s ease;
+    }
+
+    .news-item:hover {
+      transform: scale(1.02);
+      background-color: #ffeaf2;
+    }
+
+    a {
+      color: #d63031;
+      text-decoration: none;
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    small {
+      display: block;
+      margin-top: 6px;
+      color: #636e72;
+    }
+
+    .no-results {
+      text-align: center;
+      font-style: italic;
+      color: #6c5ce7;
+      margin-top: 40px;
+      font-size: 1.2em;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2.2em;
+      }
+
+      #searchBox {
+        font-size: 1em;
+      }
+
+      a {
+        font-size: 1.1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🛵 Tin Hot Bình Dương</h1>
+    <input type="text" id="searchBox" placeholder="🔍 Nhập tiêu đề tin cần tìm..." />
+    <div id="newsList">Đang tải tin tức...</div>
+  </div>
+
+  <script>
+    let allArticles = [];
+
+    fetch("/articles")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Lỗi HTTP: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (!Array.isArray(data)) throw new Error("Dữ liệu không hợp lệ");
+        allArticles = data;
+        renderArticles(data);
+      })
+      .catch(error => {
+        const container = document.getElementById("newsList");
+        container.innerHTML = `<p class="no-results">⚠️ Không thể tải tin: ${error.message}</p>`;
+        console.error("Error loading articles:", error);
+      });
+
+    function renderArticles(articles) {
+      const container = document.getElementById("newsList");
+      container.innerHTML = "";
+
+      if (articles.length === 0) {
+        container.innerHTML = '<p class="no-results">🙈 Không tìm thấy bài viết phù hợp.</p>';
+        return;
+      }
+
+      articles.forEach(article => {
+        if (!article.title || !article.url) return;
+
+        const div = document.createElement("div");
+        div.className = "news-item";
+        div.innerHTML = `
+          <a href="${article.url}" target="_blank" rel="noopener noreferrer">${article.title}</a>
+          <small>📍 Nguồn: ${article.source || "Không rõ"}</small>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    document.getElementById("searchBox").addEventListener("input", function () {
+      const keyword = this.value.toLowerCase();
+      const filtered = allArticles.filter(article =>
+        article.title.toLowerCase().includes(keyword)
+      );
+      renderArticles(filtered);
+    });
+  </script>
+</body>
+</html>
