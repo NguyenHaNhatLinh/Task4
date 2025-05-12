@@ -4,112 +4,328 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🛵 Tin Hot Bình Dương</title>
-  <link href="https://fonts.googleapis.com/css2?family=Coiny&family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --primary: #ff0099;
+      --secondary: #493240;
+      --accent: #00f7ff;
+      --background: #1e0b2c;
+      --card-bg: #2d1b3a;
+      --text-light: #ffffff;
+      --text-dim: #b8c6db;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #ffeaa7, #fab1a0);
-      color: #2d3436;
+      font-family: 'Quicksand', sans-serif;
+      background-color: var(--background);
+      background-image: 
+        radial-gradient(circle at 25% 10%, rgba(255, 0, 153, 0.2) 0%, transparent 40%),
+        radial-gradient(circle at 75% 75%, rgba(0, 247, 255, 0.15) 0%, transparent 40%);
+      color: var(--text-light);
+      min-height: 100vh;
     }
 
     .container {
       max-width: 1000px;
       margin: 0 auto;
-      padding: 30px 20px;
+      padding: 40px 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .logo-container {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .logo-glow {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: var(--primary);
+      filter: blur(20px);
+      opacity: 0.5;
+      z-index: 0;
+      border-radius: 50%;
+      animation: pulse 3s infinite alternate;
+    }
+
+    .logo {
+      font-size: 4rem;
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(0 0 8px var(--accent));
+      animation: hover 4s ease-in-out infinite;
     }
 
     h1 {
-      font-family: 'Coiny', cursive;
-      text-align: center;
-      font-size: 3.5em;
-      color: #d63031;
-      text-shadow: 2px 2px #ffeaa7;
-      margin-bottom: 20px;
+      font-family: 'Bungee', cursive;
+      font-size: 3rem;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 10px rgba(255, 0, 153, 0.3);
+      margin: 10px 0;
+      letter-spacing: 1px;
+      position: relative;
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: 40px;
     }
 
     #searchBox {
       width: 100%;
-      padding: 14px;
-      font-size: 1.1em;
-      border-radius: 12px;
-      border: 2px dashed #d63031;
-      margin-bottom: 30px;
-      background-color: #fff;
-      transition: border-color 0.3s, box-shadow 0.3s;
+      padding: 16px 20px;
+      padding-left: 45px;
+      font-size: 1.1rem;
+      border-radius: 24px;
+      border: 2px solid transparent;
+      background-color: var(--card-bg);
+      color: var(--text-light);
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     }
 
     #searchBox:focus {
       outline: none;
-      border-color: #fd79a8;
-      box-shadow: 0 0 10px rgba(253, 121, 168, 0.3);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(255, 0, 153, 0.3);
+    }
+
+    #searchBox::placeholder {
+      color: var(--text-dim);
+      opacity: 0.7;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary);
+      font-size: 1.5em;
+      pointer-events: none;
+    }
+
+    #newsList {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
     }
 
     .news-item {
-      background: #fff0f6;
-      border-left: 8px solid #fd79a8;
-      padding: 18px 20px;
-      margin-bottom: 18px;
-      border-radius: 16px;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.07);
-      transition: transform 0.2s ease;
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 18px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+      z-index: 1;
+      backdrop-filter: blur(5px);
+      border-left: none;
+    }
+
+    .news-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--primary), var(--accent));
+      transition: all 0.3s ease;
     }
 
     .news-item:hover {
-      transform: scale(1.02);
-      background-color: #ffeaf2;
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
     }
 
-    a {
-      color: #d63031;
+    .news-item:hover::before {
+      width: 7px;
+    }
+
+    .news-item::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .news-item:hover::after {
+      opacity: 0.15;
+    }
+
+    .news-title {
+      color: var(--text-light);
       text-decoration: none;
-      font-size: 1.3em;
-      font-weight: bold;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    small {
+      font-size: 1.35rem;
+      font-weight: 700;
       display: block;
-      margin-top: 6px;
-      color: #636e72;
+      margin-bottom: 12px;
+      line-height: 1.4;
+      transition: color 0.3s ease;
+    }
+
+    .news-title:hover {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .news-source {
+      display: flex;
+      align-items: center;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 12px;
+    }
+
+    .source-icon {
+      margin-right: 5px;
+      color: var(--accent);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      font-size: 1.2rem;
+      color: var(--text-dim);
+      opacity: 0.8;
     }
 
     .no-results {
+      grid-column: 1 / -1;
       text-align: center;
       font-style: italic;
-      color: #6c5ce7;
-      margin-top: 40px;
-      font-size: 1.2em;
+      color: var(--text-dim);
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 18px;
+      font-size: 1.2rem;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 0.3;
+        transform: scale(0.95);
+      }
+      100% {
+        opacity: 0.6;
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes hover {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes gradientShift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
     }
 
     @media (max-width: 600px) {
+      .container {
+        padding: 20px 15px;
+      }
+      
       h1 {
-        font-size: 2.2em;
+        font-size: 2rem;
       }
-
-      #searchBox {
-        font-size: 1em;
+      
+      .logo {
+        font-size: 3rem;
       }
-
-      a {
-        font-size: 1.1em;
+      
+      #newsList {
+        grid-template-columns: 1fr;
+      }
+      
+      .news-title {
+        font-size: 1.2rem;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🛵 Tin Hot Bình Dương</h1>
-    <input type="text" id="searchBox" placeholder="🔍 Nhập tiêu đề tin cần tìm..." />
-    <div id="newsList">Đang tải tin tức...</div>
+    <div class="header">
+      <div class="logo-container">
+        <div class="logo-glow"></div>
+        <div class="logo">🛵</div>
+      </div>
+      <h1>Tin Hot Bình Dương</h1>
+    </div>
+    
+    <div class="search-container">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchBox" placeholder="Tìm kiếm tin tức nóng hổi..." />
+    </div>
+    
+    <div id="newsList" class="loading">Đang tải tin tức...</div>
   </div>
 
   <script>
     let allArticles = [];
+
+    // Hiệu ứng chờ đẹp mắt
+    const loadingMessages = [
+      "Đang tải tin tức nóng hổi...",
+      "Đang gom góp tin hay...",
+      "Sắp hoàn thành rồi...",
+      "Tin tức đang về..."
+    ];
+    
+    let loadingIndex = 0;
+    const loadingInterval = setInterval(() => {
+      if (document.getElementById("newsList").className === "loading") {
+        document.getElementById("newsList").innerHTML = loadingMessages[loadingIndex];
+        loadingIndex = (loadingIndex + 1) % loadingMessages.length;
+      } else {
+        clearInterval(loadingInterval);
+      }
+    }, 800);
 
     fetch("/articles")
       .then(response => {
@@ -125,12 +341,14 @@
       })
       .catch(error => {
         const container = document.getElementById("newsList");
+        container.className = "";
         container.innerHTML = `<p class="no-results">⚠️ Không thể tải tin: ${error.message}</p>`;
         console.error("Error loading articles:", error);
       });
 
     function renderArticles(articles) {
       const container = document.getElementById("newsList");
+      container.className = "";
       container.innerHTML = "";
 
       if (articles.length === 0) {
@@ -144,8 +362,11 @@
         const div = document.createElement("div");
         div.className = "news-item";
         div.innerHTML = `
-          <a href="${article.url}" target="_blank" rel="noopener noreferrer">${article.title}</a>
-          <small>📍 Nguồn: ${article.source || "Không rõ"}</small>
+          <a href="${article.url}" class="news-title" target="_blank" rel="noopener noreferrer">${article.title}</a>
+          <div class="news-source">
+            <span class="source-icon">📍</span>
+            <span>Nguồn: ${article.source || "Không rõ"}</span>
+          </div>
         `;
         container.appendChild(div);
       });
